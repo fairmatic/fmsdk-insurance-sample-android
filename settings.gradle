@@ -1,0 +1,24 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+        maven {
+            // Maven central snapshot repository
+            url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            // Maven central snapshot repository
+            url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+}
+rootProject.name = "sampleApp"
+include ':app'

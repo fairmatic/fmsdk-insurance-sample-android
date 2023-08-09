@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">SomeFleetAndroidSample</string>
+    <string name="action_settings">Settings</string>
+    <string name="email_placeholder">user@email.com</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="go_on_duty_message">Click the button below when you are ready to go on duty!</string>
+    <string name="on_duty_button_text">Go On Duty</string>
+    <string name="accept_new_ride_request">Accept New Ride Request</string>
+    <string name="pickup_a_passenger">Pickup A Passenger</string>
+    <string name="cancel_a_request">Cancel A Request</string>
+    <string name="drop_a_passenger">Drop A Passenger</string>
+    <string name="off_duty">Off Duty</string>
+</resources>
