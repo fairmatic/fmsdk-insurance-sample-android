@@ -1,0 +1,6 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Text color for the button when enabled -->
+    <item android:color="@color/custom_button_text_color" android:state_enabled="true" />
+    <!-- Text color for the button when disabled -->
+    <item android:color="#ACACAC" android:state_enabled="false" />
+</selector>
