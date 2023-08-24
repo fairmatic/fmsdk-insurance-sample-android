@@ -6,13 +6,12 @@ import androidx.annotation.RequiresApi
 import com.fairmatic.sampleapp.utils.NotificationUtility
 import com.fairmatic.sdk.classes.FairmaticNotificationContainer
 import com.fairmatic.sdk.classes.FairmaticNotificationProvider
-import com.zendrive.sdk.ZendriveNotificationContainer
 
 class MyFairmaticNotificationProvider : FairmaticNotificationProvider{
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getInDriveNotificationContainer(context: Context): FairmaticNotificationContainer {
         return FairmaticNotificationContainer(
-            MyFairmaticNotificationProvider.FAIRMATIC_NOTIFICATION_ID,
+            FAIRMATIC_NOTIFICATION_ID,
             NotificationUtility.getInDriveNotification(context)
         )
     }
@@ -20,7 +19,7 @@ class MyFairmaticNotificationProvider : FairmaticNotificationProvider{
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getMaybeInDriveNotificationContainer(context: Context): FairmaticNotificationContainer {
         return FairmaticNotificationContainer(
-            MyFairmaticNotificationProvider.FAIRMATIC_NOTIFICATION_ID,
+            FAIRMATIC_NOTIFICATION_ID,
             NotificationUtility.getMaybeInDriveNotification(context)
         )
     }

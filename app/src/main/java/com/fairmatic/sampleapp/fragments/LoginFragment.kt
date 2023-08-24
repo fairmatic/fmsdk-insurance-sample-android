@@ -11,6 +11,8 @@ import com.fairmatic.sampleapp.manager.SharedPrefsManager
 import com.fairmatic.sampleapp.MainActivity
 import com.fairmatic.sampleapp.R
 import com.fairmatic.sampleapp.manager.FairmaticManager
+import com.fairmatic.sdk.classes.FairmaticOperationCallback
+import com.fairmatic.sdk.classes.FairmaticOperationResult
 
 class LoginFragment : Fragment(), View.OnClickListener {
     private var idEditText: EditText? = null
@@ -37,9 +39,17 @@ class LoginFragment : Fragment(), View.OnClickListener {
             // Save driver information
             context?.let { SharedPrefsManager.sharedInstance(it)}?.driverId = driverId
             // Initialize ZendriveSDK
-            FairmaticManager.sharedInstance().initializeFairmaticSDK(context, driverId)
-            // Load UI
-            (activity as MainActivity).replaceFragment(OffDutyFragment())
+            FairmaticManager.sharedInstance().initializeFairmaticSDK(context, driverId, object: FairmaticOperationCallback {
+                override fun onCompletion(result: FairmaticOperationResult) {
+                    if(result is FairmaticOperationResult.Success) {
+                        (activity as MainActivity).replaceFragment(OffDutyFragment())
+                        Toast.makeText(context, "Successfully initialized Fairmatic SDK", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val errorMessage = (result as FairmaticOperationResult.Failure).error
+                        Toast.makeText(context, "Failed to initialize Fairmatic SDK : ${errorMessage.name}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
         }
     }
 }

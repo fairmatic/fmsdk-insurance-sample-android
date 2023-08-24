@@ -5,10 +5,13 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import android.view.View
 import androidx.annotation.RequiresApi
 import com.fairmatic.sampleapp.Constants
 import com.fairmatic.sampleapp.MyFairmaticBroadcastReceiver
 import com.fairmatic.sampleapp.MyFairmaticNotificationProvider
+import com.fairmatic.sampleapp.R
+import com.fairmatic.sampleapp.fragments.OnDutyFragment
 import com.fairmatic.sampleapp.utils.NotificationUtility
 import com.fairmatic.sdk.Fairmatic
 import com.fairmatic.sdk.classes.FairmaticConfiguration
@@ -22,18 +25,21 @@ import com.fairmatic.sdk.classes.FairmaticSettingsCallback
 import com.fairmatic.sdk.classes.GooglePlaySettingsError
 
 class FairmaticManager {
-    private inner class InsuranceInfo internal constructor(
+    inner class InsuranceInfo internal constructor(
         var insurancePeriod: Int,
         var trackingId: String?
     )
 
-    val fairmaticDriverAttributes = FairmaticDriverAttributes(
+    private val fairmaticDriverAttributes = FairmaticDriverAttributes(
         name = "John Doe",
         email = "john_doe@company.com",
         phoneNumber = "1234567890"
     )
-
-    fun initializeFairmaticSDK(context: Context?, driverId: String?) {
+    fun initializeFairmaticSDK(
+        context: Context?,
+        driverId: String?,
+        callback: FairmaticOperationCallback
+    ) {
         Log.d(Constants.LOG_TAG_DEBUG, "initializeFairmaticSDK called")
         val fairmaticConfiguration = driverId?.let {
             FairmaticConfiguration(
@@ -69,11 +75,10 @@ class FairmaticManager {
                                     )
                                 )
                                 // Display error
-                                if (context != null) {
-                                    NotificationUtility.displayFairmaticSetupFailureNotification(context)
-                                }
+                                NotificationUtility.displayFairmaticSetupFailureNotification(context)
                                 SharedPrefsManager.sharedInstance(context)?.setRetryFairmaticSetup(true)
                             }
+                            callback.onCompletion(result)
                         }
                     }
                 )
@@ -164,9 +169,46 @@ class FairmaticManager {
         })
     }
 
+
+    fun handleInsurancePeriod1(context : Context?, callback : FairmaticOperationCallback?){
+        if (context != null) {
+            Fairmatic.startDriveWithPeriod1(context, callback)
+        }
+    }
+
+    fun handleInsurancePeriod2(context: Context?, callback: FairmaticOperationCallback?) {
+        if (context != null) {
+            System.currentTimeMillis().toString().let {
+                Fairmatic.startDriveWithPeriod2(context, it, callback)
+            }
+
+        }
+    }
+
+    fun handleInsurancePeriod3(context: Context?, callback: FairmaticOperationCallback?){
+        if (context != null) {
+            System.currentTimeMillis().toString().let {
+                Fairmatic.startDriveWithPeriod3(context, it, callback)
+            }
+        }
+    }
+
+    fun handleStopPeriod(context: Context?, callback: FairmaticOperationCallback?){
+        if (context != null) {
+            Fairmatic.stopPeriod(context, callback)
+        }
+    }
+
+
+
+
     fun updateFairmaticInsurancePeriod(context: Context?) {
-        val insuranceCalllback: FairmaticOperationCallback = object : FairmaticOperationCallback {
+        /*val insuranceCallback: FairmaticOperationCallback = object : FairmaticOperationCallback {
             override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
+                if (fairmaticOperationResult is FairmaticOperationResult.Success) {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switch success")
+
+                }
                 if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
                     Log.d(
                         Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
@@ -174,59 +216,40 @@ class FairmaticManager {
                     )
                 }
             }
-        }
+        }*/
         val insuranceInfo = currentlyActiveInsurancePeriod(context)
+        Log.d("check123", "updateFairmaticInsurancePeriod: ${insuranceInfo?.insurancePeriod}")
         if (insuranceInfo == null) {
             Log.d(Constants.LOG_TAG_DEBUG, "updateFairmaticInsurancePeriod with NO period")
             if (context != null) {
-                Fairmatic.stopPeriod(context, insuranceCalllback)
+                handleStopPeriod(context, object : FairmaticOperationCallback {
+                    override fun onCompletion(result: FairmaticOperationResult) {
+                        //TODO("Not yet implemented")
+                    }
+                })
             }
         } else if (insuranceInfo.insurancePeriod == 3) {
-            Log.d(
-                Constants.LOG_TAG_DEBUG, String.format(
-                    "updateFairmaticInsurancePeriod with period %d and id: %s",
-                    insuranceInfo.insurancePeriod,
-                    insuranceInfo.trackingId
-                )
-            )
-            if (context != null) {
-                insuranceInfo.trackingId?.let {
-                    Fairmatic.startDriveWithPeriod3(
-                        context, it,
-                        insuranceCalllback
-                    )
+            handleInsurancePeriod3(context, object : FairmaticOperationCallback{
+                override fun onCompletion(result: FairmaticOperationResult) {
+                    //TODO("Not yet implemented")
                 }
-            }
+            })
         } else if (insuranceInfo.insurancePeriod == 2) {
-            Log.d(
-                Constants.LOG_TAG_DEBUG, String.format(
-                    "updateFairmaticInsurancePeriod with period %d and id: %s",
-                    insuranceInfo.insurancePeriod,
-                    insuranceInfo.trackingId
-                )
-            )
-            if (context != null) {
-                insuranceInfo.trackingId?.let {
-                    Fairmatic.startDriveWithPeriod2(
-                        context, it,
-                        insuranceCalllback
-                    )
+            handleInsurancePeriod2(context, object : FairmaticOperationCallback{
+                override fun onCompletion(result: FairmaticOperationResult) {
+                    //TODO("Not yet implemented")
                 }
-            }
+            })
         } else {
-            Log.d(
-                Constants.LOG_TAG_DEBUG, String.format(
-                    "updateFairmaticInsurancePeriod with period %d",
-                    insuranceInfo.insurancePeriod
-                )
-            )
-            if (context != null) {
-                Fairmatic.startDriveWithPeriod1(context, insuranceCalllback)
-            }
+            handleInsurancePeriod1(context, object : FairmaticOperationCallback {
+                override fun onCompletion(result: FairmaticOperationResult) {
+                    //TODO("Not yet implemented")
+                }
+            })
         }
     }
 
-    private fun currentlyActiveInsurancePeriod(context: Context?): InsuranceInfo? {
+    fun currentlyActiveInsurancePeriod(context: Context?): InsuranceInfo? {
         val state = TripManager.sharedInstance(
             context!!
         )!!.tripManagerState

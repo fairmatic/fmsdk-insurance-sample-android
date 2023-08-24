@@ -14,8 +14,11 @@ import com.fairmatic.sampleapp.manager.TripManager
 import com.fairmatic.sampleapp.Constants
 import com.fairmatic.sampleapp.MainActivity
 import com.fairmatic.sampleapp.R
+import com.fairmatic.sampleapp.manager.FairmaticManager
+import com.fairmatic.sdk.classes.FairmaticOperationCallback
+import com.fairmatic.sdk.classes.FairmaticOperationResult
 
-class OnDutyFragment : Fragment(), View.OnClickListener {
+class OnDutyFragment : Fragment() {
     private lateinit var currentStateTextView: TextView
     private lateinit var currentInsurancePeriodTextView: TextView
     private lateinit var pickupAPassengerButton: Button
@@ -32,33 +35,161 @@ class OnDutyFragment : Fragment(), View.OnClickListener {
         currentInsurancePeriodTextView = layout.findViewById(R.id.currentInsurancePeriodTextView)
         //layout.findViewById<View>(R.id.acceptNewRideReqButton).setOnClickListener(this)
         acceptNewRideReqButton = layout.findViewById(R.id.acceptNewRideReqButton)
-        acceptNewRideReqButton.setOnClickListener(this)
+        //acceptNewRideReqButton.setOnClickListener(this)
         pickupAPassengerButton = layout.findViewById(R.id.pickupAPassengerButton)
-        pickupAPassengerButton.setOnClickListener(this)
+        //pickupAPassengerButton.setOnClickListener(this)
         cancelRequestButton = layout.findViewById(R.id.cancelRequestButton)
-        cancelRequestButton.setOnClickListener(this)
+        //cancelRequestButton.setOnClickListener(this)
         dropAPassengerButton = layout.findViewById(R.id.dropAPassengerButton)
-        dropAPassengerButton.setOnClickListener(this)
+        //dropAPassengerButton.setOnClickListener(this)
         offDutyButton = layout.findViewById(R.id.offDutyButton)
-        offDutyButton.setOnClickListener(this)
-        refreshUI()
+        //offDutyButton.setOnClickListener(this)
+        //refreshUI()
         return layout
     }
 
-    @SuppressLint("DefaultLocale")
-    private fun refreshUI() {
+    override fun onResume() {
+        super.onResume()
+        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context)
+
+        //create a clicklistener for the acceptNewRideReqButton
+        acceptNewRideReqButton.setOnClickListener {
+            Log.d(Constants.LOG_TAG_DEBUG, "acceptNewRideReqButton tapped")
+            Toast.makeText(
+                context,
+                "Accepting new passenger request",
+                Toast.LENGTH_SHORT
+            ).show()
+            val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
+            if (tripManager != null) {
+                context?.let { tripManager.acceptNewPassengerRequest(it, object : FairmaticOperationCallback {
+                    override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
+                        if (fairmaticOperationResult is FairmaticOperationResult.Success) {
+                            Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 2")
+                            refreshUIForPeriod2()
+
+                        }
+                        if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
+                            Log.d(
+                                Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
+                                        fairmaticOperationResult.error.name
+                            )
+                        }
+                    }
+                })
+                }
+            }
+        }
+
+        //create a click listener for the pickupAPassengerButton
+        pickupAPassengerButton.setOnClickListener {
+            Log.d(Constants.LOG_TAG_DEBUG, "pickupAPassengerButton tapped")
+            val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
+            if (tripManager != null) {
+                context?.let { tripManager.pickupAPassenger(it, object : FairmaticOperationCallback {
+                    override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
+                        if (fairmaticOperationResult is FairmaticOperationResult.Success) {
+                            Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 3")
+                            refreshUIForPeriod3()
+
+                        }
+                        if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
+                            Log.d(
+                                Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
+                                        fairmaticOperationResult.error.name
+                            )
+                        }
+                    }
+                })
+                }
+            }
+        }
+
+        //create a click listener for the cancelRequestButton
+        cancelRequestButton.setOnClickListener {
+            Log.d(Constants.LOG_TAG_DEBUG, "cancelRequestButton tapped")
+            val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
+            if (tripManager != null) {
+                context?.let { tripManager.cancelARequest(it, object :
+                    FairmaticOperationCallback {
+                    override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
+                        if (fairmaticOperationResult is FairmaticOperationResult.Success) {
+                            Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 1")
+                            refreshUIForPeriod1()
+
+                        }
+                        if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
+                            Log.d(
+                                Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
+                                        fairmaticOperationResult.error.name
+                            )
+                        }
+                    }
+                })
+                }
+            }
+        }
+
+        //create a click listener for the dropAPassengerButton
+        dropAPassengerButton.setOnClickListener {
+            Log.d(Constants.LOG_TAG_DEBUG, "dropAPassengerButton tapped")
+            val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
+            if (tripManager != null) {
+                context?.let { tripManager.dropAPassenger(it, object :
+                    FairmaticOperationCallback {
+                    override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
+                        if (fairmaticOperationResult is FairmaticOperationResult.Success) {
+                            Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 1")
+                            refreshUIForPeriod1()
+
+                        }
+                        if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
+                            Log.d(
+                                Constants.LOG_TAG_DEBUG, "Insurance period switch failed, error: " +
+                                        fairmaticOperationResult.error.name
+                            )
+                        }
+                    }
+                })
+                }
+            }
+        }
+
+        //create a click listener for the offDutyButton
+        offDutyButton.setOnClickListener {
+            Log.d(Constants.LOG_TAG_DEBUG, "offDutyButton tapped")
+            Toast.makeText(
+                context,
+                "Going off duty",
+                Toast.LENGTH_SHORT
+            ).show()
+            val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
+            if (tripManager != null) {
+                context?.let { tripManager.goOffDuty(it, object : FairmaticOperationCallback {
+                    override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
+                        if (fairmaticOperationResult is FairmaticOperationResult.Success) {
+                            Log.d(Constants.LOG_TAG_DEBUG, "Insurance period stopped")
+                            (activity as MainActivity).replaceFragment(OffDutyFragment())
+                        }
+                        if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
+                            Log.d(
+                                Constants.LOG_TAG_DEBUG, "Going Off duty failed, error: " +
+                                        fairmaticOperationResult.error.name
+                            )
+                        }
+                    }
+                }) }
+            }
+
+        }
+    }
+
+    private fun refreshUIForPeriod1() {
         val tripManagerState: TripManager.State =
             context?.let { TripManager.sharedInstance(it)?.tripManagerState } ?: return
         val passengerInCar: Boolean = tripManagerState.passengerInCar
         val passengerWaitingForPickup: Boolean = tripManagerState.passengerWaitingForPickup
-        var insurancePeriod = 0
-        if (passengerInCar) {
-            insurancePeriod = 3
-        } else if (passengerWaitingForPickup) {
-            insurancePeriod = 2
-        } else if (tripManagerState.isUserOnDuty) {
-            insurancePeriod = 1
-        }
+        var insurancePeriod = FairmaticManager.sharedInstance().currentlyActiveInsurancePeriod(context)?.insurancePeriod
         currentStateTextView.text = String.format(
             """
                 Passenger In Car:  %s
@@ -67,63 +198,52 @@ class OnDutyFragment : Fragment(), View.OnClickListener {
             passengerWaitingForPickup.toString().toUpperCase()
         )
         currentInsurancePeriodTextView.text = String.format("Insurance Period: %d", insurancePeriod)
-
-        acceptNewRideReqButton.isEnabled  = !passengerWaitingForPickup && !passengerInCar
-        pickupAPassengerButton.isEnabled = passengerWaitingForPickup == true
-        cancelRequestButton.isEnabled = passengerWaitingForPickup == true
-        dropAPassengerButton.isEnabled = passengerInCar == true
-        offDutyButton.isEnabled = !passengerInCar && !passengerWaitingForPickup
+        acceptNewRideReqButton.isEnabled = true
+        pickupAPassengerButton.isEnabled = false
+        cancelRequestButton.isEnabled = false
+        dropAPassengerButton.isEnabled = false
+        offDutyButton.isEnabled = true
     }
 
-    override fun onClick(view: View) {
-        val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
-        when (view.id) {
-            R.id.acceptNewRideReqButton -> {
-                Log.d(Constants.LOG_TAG_DEBUG, "acceptNewRideReqButton tapped")
-                Toast.makeText(
-                    context,
-                    "Accepting new passenger request",
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (tripManager != null) {
-                    context?.let { tripManager.acceptNewPassengerRequest(it) }
-                }
-            }
+    private fun refreshUIForPeriod2() {
+        val tripManagerState: TripManager.State =
+            context?.let { TripManager.sharedInstance(it)?.tripManagerState } ?: return
+        val passengerInCar: Boolean = tripManagerState.passengerInCar
+        val passengerWaitingForPickup: Boolean = tripManagerState.passengerWaitingForPickup
+        var insurancePeriod = FairmaticManager.sharedInstance().currentlyActiveInsurancePeriod(context)?.insurancePeriod
+        currentStateTextView.text = String.format(
+            """
+                Passenger In Car:  %s
+                Passenger Waiting For Pickup:  %s
+                """.trimIndent(), passengerInCar.toString().toUpperCase(),
+            passengerWaitingForPickup.toString().toUpperCase()
+        )
+        currentInsurancePeriodTextView.text = String.format("Insurance Period: %d", insurancePeriod)
+        acceptNewRideReqButton.isEnabled = false
+        pickupAPassengerButton.isEnabled = true
+        cancelRequestButton.isEnabled = true
+        dropAPassengerButton.isEnabled = false
+        offDutyButton.isEnabled = false
+    }
 
-            R.id.pickupAPassengerButton -> {
-                Log.d(Constants.LOG_TAG_DEBUG, "pickupAPassengerButton tapped")
-                if (tripManager != null) {
-                    context?.let { tripManager.pickupAPassenger(it) }
-                }
-            }
-
-            R.id.cancelRequestButton -> {
-                Log.d(Constants.LOG_TAG_DEBUG, "cancelRequestButton tapped")
-                if (tripManager != null) {
-                    context?.let { tripManager.cancelARequest(it) }
-                }
-            }
-
-            R.id.dropAPassengerButton -> {
-                Log.d(Constants.LOG_TAG_DEBUG, "dropAPassengerButton tapped")
-                if (tripManager != null) {
-                    context?.let { tripManager.dropAPassenger(it) }
-                }
-            }
-
-            R.id.offDutyButton -> {
-                Log.d(Constants.LOG_TAG_DEBUG, "offDutyButton tapped")
-                Toast.makeText(
-                    context,
-                    "Going off duty",
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (tripManager != null) {
-                    context?.let { tripManager.goOffDuty(it) }
-                }
-                (activity as MainActivity).replaceFragment(OffDutyFragment())
-            }
-        }
-        refreshUI()
+    private fun refreshUIForPeriod3() {
+        val tripManagerState: TripManager.State =
+            context?.let { TripManager.sharedInstance(it)?.tripManagerState } ?: return
+        val passengerInCar: Boolean = tripManagerState.passengerInCar
+        val passengerWaitingForPickup: Boolean = tripManagerState.passengerWaitingForPickup
+        var insurancePeriod = FairmaticManager.sharedInstance().currentlyActiveInsurancePeriod(context)?.insurancePeriod
+        currentStateTextView.text = String.format(
+            """
+                Passenger In Car:  %s
+                Passenger Waiting For Pickup:  %s
+                """.trimIndent(), passengerInCar.toString().toUpperCase(),
+            passengerWaitingForPickup.toString().toUpperCase()
+        )
+        currentInsurancePeriodTextView.text = String.format("Insurance Period: %d", insurancePeriod)
+        acceptNewRideReqButton.isEnabled = false
+        pickupAPassengerButton.isEnabled = false
+        cancelRequestButton.isEnabled = false
+        dropAPassengerButton.isEnabled = true
+        offDutyButton.isEnabled = false
     }
 }

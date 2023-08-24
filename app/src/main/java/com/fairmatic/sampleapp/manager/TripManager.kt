@@ -1,6 +1,9 @@
 package com.fairmatic.sampleapp.manager
 
 import android.content.Context
+import android.widget.Toast
+import com.fairmatic.sdk.classes.FairmaticOperationCallback
+import com.fairmatic.sdk.classes.FairmaticOperationResult
 
 class TripManager private constructor(context: Context) {
     inner class State {
@@ -40,61 +43,109 @@ class TripManager private constructor(context: Context) {
     }
 
     @Synchronized
-    fun acceptNewPassengerRequest(context: Context) {
-        state.passengerWaitingForPickup = true
-        SharedPrefsManager.sharedInstance(context)
-            ?.setPassengersWaitingForPickup(state.passengerWaitingForPickup)
+    fun acceptNewPassengerRequest(context: Context, callback: FairmaticOperationCallback) {
         updateTrackingIdIfNeeded(context)
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context)
+        FairmaticManager.sharedInstance().handleInsurancePeriod2(context, object : FairmaticOperationCallback {
+            override fun onCompletion(result: FairmaticOperationResult) {
+                if (result is FairmaticOperationResult.Success){
+                    state.passengerWaitingForPickup = true
+                    SharedPrefsManager.sharedInstance(context)
+                        ?.setPassengersWaitingForPickup(state.passengerWaitingForPickup)
+                } else {
+                    Toast.makeText(context, "Failed to accept new passenger request", Toast.LENGTH_SHORT).show()
+                }
+                callback.onCompletion(result)
+            }
+        })
+    }
+
+
+
+    @Synchronized
+    fun pickupAPassenger(context: Context, callback: FairmaticOperationCallback) {
+        updateTrackingIdIfNeeded(context)
+        FairmaticManager.sharedInstance().handleInsurancePeriod3(context, object : FairmaticOperationCallback {
+            override fun onCompletion(result: FairmaticOperationResult) {
+                if (result is FairmaticOperationResult.Success){
+                    state.passengerInCar = true
+                    state.passengerWaitingForPickup = false
+                    SharedPrefsManager.sharedInstance(context)!!.setPassengersInCar(state.passengerInCar)
+
+                } else {
+                    Toast.makeText(context, "Failed to pickup a passenger", Toast.LENGTH_SHORT).show()
+                }
+                callback.onCompletion(result)
+            }
+        })
     }
 
     @Synchronized
-    fun pickupAPassenger(context: Context) {
-        state.passengerWaitingForPickup = false
-        SharedPrefsManager.sharedInstance(context)
-            ?.setPassengersWaitingForPickup(state.passengerWaitingForPickup)
-        state.passengerInCar = true
-        SharedPrefsManager.sharedInstance(context)
-            ?.setPassengersInCar(state.passengerInCar)
+    fun cancelARequest(context: Context, callback: FairmaticOperationCallback) {
         updateTrackingIdIfNeeded(context)
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context)
+        FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
+            override fun onCompletion(result: FairmaticOperationResult) {
+                if (result is FairmaticOperationResult.Success){
+                    state.passengerWaitingForPickup = false
+                    SharedPrefsManager.sharedInstance(context)
+                        ?.setPassengersWaitingForPickup(state.passengerWaitingForPickup)
+                } else {
+                    Toast.makeText(context, "Failed to cancel a request", Toast.LENGTH_SHORT).show()
+                }
+                callback.onCompletion(result)
+            }
+        })
     }
 
     @Synchronized
-    fun cancelARequest(context: Context) {
-        state.passengerWaitingForPickup = false
-        SharedPrefsManager.sharedInstance(context)
-            ?.setPassengersWaitingForPickup(state.passengerWaitingForPickup)
+    fun dropAPassenger(context: Context, callback: FairmaticOperationCallback) {
         updateTrackingIdIfNeeded(context)
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context)
-    }
-
-    @Synchronized
-    fun dropAPassenger(context: Context) {
-        state.passengerInCar = false
-        SharedPrefsManager.sharedInstance(context)!!.setPassengersInCar(state.passengerInCar)
-        updateTrackingIdIfNeeded(context)
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context)
+        FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
+            override fun onCompletion(result: FairmaticOperationResult) {
+                if (result is FairmaticOperationResult.Success){
+                    state.passengerInCar = false
+                    SharedPrefsManager.sharedInstance(context)!!.setPassengersInCar(state.passengerInCar)
+                } else {
+                    Toast.makeText(context, "Failed to drop a passenger", Toast.LENGTH_SHORT).show()
+                }
+                callback.onCompletion(result)
+            }
+        })
     }
 
     @Synchronized
     fun goOnDuty(context: Context) {
-        state.isUserOnDuty = true
-        SharedPrefsManager.sharedInstance(context)?.isUserOnDuty = state.isUserOnDuty
         updateTrackingIdIfNeeded(context)
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context)
+        FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
+            override fun onCompletion(result: FairmaticOperationResult) {
+                if (result is FairmaticOperationResult.Success){
+                    state.isUserOnDuty = true
+                    SharedPrefsManager.sharedInstance(context)?.isUserOnDuty = state.isUserOnDuty
+                } else {
+                    Toast.makeText(context, "Failed to go on duty", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 
     @Synchronized
-    fun goOffDuty(context: Context) {
-        state.isUserOnDuty = false
-        SharedPrefsManager.sharedInstance(context)?.isUserOnDuty = state.isUserOnDuty
+    fun goOffDuty(context: Context, callback: FairmaticOperationCallback) {
         updateTrackingIdIfNeeded(context)
-        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context)
+        FairmaticManager.sharedInstance().handleStopPeriod(context, object : FairmaticOperationCallback {
+            override fun onCompletion(result: FairmaticOperationResult) {
+                if (result is FairmaticOperationResult.Success){
+                    state.isUserOnDuty = false
+                    SharedPrefsManager.sharedInstance(context)?.isUserOnDuty = state.isUserOnDuty
+                } else {
+                    Toast.makeText(context, "Failed to go off duty", Toast.LENGTH_SHORT).show()
+                }
+                callback.onCompletion(result)
+
+            }
+        })
     }
 
     private fun updateTrackingIdIfNeeded(context: Context) {
-        if (state.passengerWaitingForPickup || state.passengerInCar ) {
+        if (state.isUserOnDuty ) {
             // We need trackingId
             if (state.trackingId == null) {
                 state.trackingId = System.currentTimeMillis().toString()
