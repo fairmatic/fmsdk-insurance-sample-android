@@ -17,8 +17,8 @@ class TripManager private constructor(context: Context) {
             passenegersInCar: Boolean, trackingId: String?
         ) {
             this.isUserOnDuty = isUserOnDuty
-            passengerWaitingForPickup = passenegersWaitingForPickup
-            passengerInCar = passenegersInCar
+            this.passengerWaitingForPickup = passenegersWaitingForPickup
+            this.passengerInCar = passenegersInCar
             this.trackingId = trackingId
         }
 
@@ -149,11 +149,11 @@ class TripManager private constructor(context: Context) {
             // We need trackingId
             if (state.trackingId == null) {
                 state.trackingId = System.currentTimeMillis().toString()
-                SharedPrefsManager.sharedInstance(context)!!.trackingId = state.trackingId
+                SharedPrefsManager.sharedInstance(context)?.trackingId = state.trackingId
             }
         } else {
             state.trackingId = null
-            SharedPrefsManager.sharedInstance(context)!!.trackingId = state.trackingId
+            SharedPrefsManager.sharedInstance(context)?.trackingId = state.trackingId
         }
     }
 
