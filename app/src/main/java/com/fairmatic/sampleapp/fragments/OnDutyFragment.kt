@@ -62,12 +62,11 @@ class OnDutyFragment : Fragment() {
             ).show()
             val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
             if (tripManager != null) {
+                refreshUIForPeriod2()
                 context?.let { tripManager.acceptNewPassengerRequest(it, object : FairmaticOperationCallback {
                     override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
                         if (fairmaticOperationResult is FairmaticOperationResult.Success) {
                             Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 2")
-                            refreshUIForPeriod2()
-
                         }
                         if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
                             Log.d(
@@ -86,12 +85,11 @@ class OnDutyFragment : Fragment() {
             Log.d(Constants.LOG_TAG_DEBUG, "pickupAPassengerButton tapped")
             val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
             if (tripManager != null) {
+                refreshUIForPeriod3()
                 context?.let { tripManager.pickupAPassenger(it, object : FairmaticOperationCallback {
                     override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
                         if (fairmaticOperationResult is FairmaticOperationResult.Success) {
                             Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 3")
-                            refreshUIForPeriod3()
-
                         }
                         if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
                             Log.d(
@@ -110,13 +108,12 @@ class OnDutyFragment : Fragment() {
             Log.d(Constants.LOG_TAG_DEBUG, "cancelRequestButton tapped")
             val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
             if (tripManager != null) {
+                refreshUIForPeriod1()
                 context?.let { tripManager.cancelARequest(it, object :
                     FairmaticOperationCallback {
                     override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
                         if (fairmaticOperationResult is FairmaticOperationResult.Success) {
                             Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 1")
-                            refreshUIForPeriod1()
-
                         }
                         if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
                             Log.d(
@@ -135,13 +132,12 @@ class OnDutyFragment : Fragment() {
             Log.d(Constants.LOG_TAG_DEBUG, "dropAPassengerButton tapped")
             val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
             if (tripManager != null) {
+                refreshUIForPeriod1()
                 context?.let { tripManager.dropAPassenger(it, object :
                     FairmaticOperationCallback {
                     override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
                         if (fairmaticOperationResult is FairmaticOperationResult.Success) {
                             Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 1")
-                            refreshUIForPeriod1()
-
                         }
                         if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
                             Log.d(
@@ -165,11 +161,11 @@ class OnDutyFragment : Fragment() {
             ).show()
             val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
             if (tripManager != null) {
+                (activity as MainActivity).replaceFragment(OffDutyFragment())
                 context?.let { tripManager.goOffDuty(it, object : FairmaticOperationCallback {
                     override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
                         if (fairmaticOperationResult is FairmaticOperationResult.Success) {
                             Log.d(Constants.LOG_TAG_DEBUG, "Insurance period stopped")
-                            (activity as MainActivity).replaceFragment(OffDutyFragment())
                         }
                         if (fairmaticOperationResult is FairmaticOperationResult.Failure) {
                             Log.d(
