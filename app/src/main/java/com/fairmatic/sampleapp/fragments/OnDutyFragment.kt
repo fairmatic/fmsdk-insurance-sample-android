@@ -63,7 +63,8 @@ class OnDutyFragment : Fragment() {
             val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
             if (tripManager != null) {
                 refreshUIForPeriod2()
-                context?.let { tripManager.acceptNewPassengerRequest(it, object : FairmaticOperationCallback {
+                context?.let { tripManager.acceptNewPassengerRequest(it, object :
+                    FairmaticOperationCallback {
                     override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
                         if (fairmaticOperationResult is FairmaticOperationResult.Success) {
                             Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 2")
@@ -75,7 +76,8 @@ class OnDutyFragment : Fragment() {
                             )
                         }
                     }
-                })
+                    }
+                )
                 }
             }
         }
@@ -86,7 +88,8 @@ class OnDutyFragment : Fragment() {
             val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
             if (tripManager != null) {
                 refreshUIForPeriod3()
-                context?.let { tripManager.pickupAPassenger(it, object : FairmaticOperationCallback {
+                context?.let { tripManager.pickupAPassenger(it, object :
+                    FairmaticOperationCallback {
                     override fun onCompletion(fairmaticOperationResult: FairmaticOperationResult) {
                         if (fairmaticOperationResult is FairmaticOperationResult.Success) {
                             Log.d(Constants.LOG_TAG_DEBUG, "Insurance period switched to 3")
@@ -98,7 +101,8 @@ class OnDutyFragment : Fragment() {
                             )
                         }
                     }
-                })
+                    }
+                )
                 }
             }
         }
@@ -122,7 +126,8 @@ class OnDutyFragment : Fragment() {
                             )
                         }
                     }
-                })
+                    }
+                )
                 }
             }
         }
@@ -146,7 +151,8 @@ class OnDutyFragment : Fragment() {
                             )
                         }
                     }
-                })
+                    }
+                )
                 }
             }
         }
