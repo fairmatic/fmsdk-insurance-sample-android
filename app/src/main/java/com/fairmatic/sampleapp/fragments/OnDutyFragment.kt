@@ -46,20 +46,16 @@ class OnDutyFragment : Fragment() {
         //offDutyButton.setOnClickListener(this)
         //refreshUI()
         return layout
+
     }
 
     override fun onResume() {
         super.onResume()
+        refreshUI()
         FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(context)
-
         //create a clicklistener for the acceptNewRideReqButton
         acceptNewRideReqButton.setOnClickListener {
             Log.d(Constants.LOG_TAG_DEBUG, "acceptNewRideReqButton tapped")
-            Toast.makeText(
-                context,
-                "Accepting new passenger request",
-                Toast.LENGTH_SHORT
-            ).show()
             val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
             if (tripManager != null) {
                 refreshUIForPeriod2()
@@ -81,6 +77,7 @@ class OnDutyFragment : Fragment() {
                 }
             }
         }
+
 
         //create a click listener for the pickupAPassengerButton
         pickupAPassengerButton.setOnClickListener {
@@ -186,20 +183,30 @@ class OnDutyFragment : Fragment() {
         }
     }
 
+    private fun refreshUI(){
+        val tripManager: TripManager? = context?.let { TripManager.sharedInstance(it) }
+        val fairmaticManager : FairmaticManager? = context?.let { FairmaticManager.sharedInstance() }
+        if (tripManager != null && fairmaticManager != null) {
+            val state = tripManager.tripManagerState
+            if (state.isUserOnDuty) {
+                if (state.passengerWaitingForPickup) {
+                    refreshUIForPeriod2()
+                } else if (state.passengerInCar) {
+                    refreshUIForPeriod3()
+                } else {
+                    refreshUIForPeriod1()
+                }
+            }
+        }
+    }
     private fun refreshUIForPeriod1() {
-        val tripManagerState: TripManager.State =
-            context?.let { TripManager.sharedInstance(it)?.tripManagerState } ?: return
-        val passengerInCar: Boolean = tripManagerState.passengerInCar
-        val passengerWaitingForPickup: Boolean = tripManagerState.passengerWaitingForPickup
-        var insurancePeriod = FairmaticManager.sharedInstance().currentlyActiveInsurancePeriod(context)?.insurancePeriod
         currentStateTextView.text = String.format(
             """
-                Passenger In Car:  %s
-                Passenger Waiting For Pickup:  %s
-                """.trimIndent(), passengerInCar.toString().toUpperCase(),
-            passengerWaitingForPickup.toString().toUpperCase()
+                Passenger In Car:  FALSE
+                Passenger Waiting For Pickup:  FALSE
+                """.trimIndent()
         )
-        currentInsurancePeriodTextView.text = String.format("Insurance Period: %d", insurancePeriod)
+        currentInsurancePeriodTextView.text = String.format("Insurance Period: 1")
         acceptNewRideReqButton.isEnabled = true
         pickupAPassengerButton.isEnabled = false
         cancelRequestButton.isEnabled = false
@@ -208,19 +215,13 @@ class OnDutyFragment : Fragment() {
     }
 
     private fun refreshUIForPeriod2() {
-        val tripManagerState: TripManager.State =
-            context?.let { TripManager.sharedInstance(it)?.tripManagerState } ?: return
-        val passengerInCar: Boolean = tripManagerState.passengerInCar
-        val passengerWaitingForPickup: Boolean = tripManagerState.passengerWaitingForPickup
-        var insurancePeriod = FairmaticManager.sharedInstance().currentlyActiveInsurancePeriod(context)?.insurancePeriod
         currentStateTextView.text = String.format(
             """
-                Passenger In Car:  %s
-                Passenger Waiting For Pickup:  %s
-                """.trimIndent(), passengerInCar.toString().toUpperCase(),
-            passengerWaitingForPickup.toString().toUpperCase()
+                Passenger In Car:  FALSE
+                Passenger Waiting For Pickup:  TRUE
+                """.trimIndent()
         )
-        currentInsurancePeriodTextView.text = String.format("Insurance Period: %d", insurancePeriod)
+        currentInsurancePeriodTextView.text = String.format("Insurance Period: 2")
         acceptNewRideReqButton.isEnabled = false
         pickupAPassengerButton.isEnabled = true
         cancelRequestButton.isEnabled = true
@@ -229,19 +230,13 @@ class OnDutyFragment : Fragment() {
     }
 
     private fun refreshUIForPeriod3() {
-        val tripManagerState: TripManager.State =
-            context?.let { TripManager.sharedInstance(it)?.tripManagerState } ?: return
-        val passengerInCar: Boolean = tripManagerState.passengerInCar
-        val passengerWaitingForPickup: Boolean = tripManagerState.passengerWaitingForPickup
-        var insurancePeriod = FairmaticManager.sharedInstance().currentlyActiveInsurancePeriod(context)?.insurancePeriod
         currentStateTextView.text = String.format(
             """
-                Passenger In Car:  %s
-                Passenger Waiting For Pickup:  %s
-                """.trimIndent(), passengerInCar.toString().toUpperCase(),
-            passengerWaitingForPickup.toString().toUpperCase()
+                Passenger In Car:  TRUE
+                Passenger Waiting For Pickup:  FALSE
+                """.trimIndent()
         )
-        currentInsurancePeriodTextView.text = String.format("Insurance Period: %d", insurancePeriod)
+        currentInsurancePeriodTextView.text = String.format("Insurance Period: 3")
         acceptNewRideReqButton.isEnabled = false
         pickupAPassengerButton.isEnabled = false
         cancelRequestButton.isEnabled = false

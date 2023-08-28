@@ -1,7 +1,9 @@
 package com.fairmatic.sampleapp.manager
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import com.fairmatic.sampleapp.Constants
 import com.fairmatic.sdk.classes.FairmaticOperationCallback
 import com.fairmatic.sdk.classes.FairmaticOperationResult
 
@@ -118,6 +120,7 @@ class TripManager private constructor(context: Context) {
         FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
+                    Log.d(Constants.LOG_TAG_DEBUG, "goOnDuty of tripmanager called")
                     state.isUserOnDuty = true
                     SharedPrefsManager.sharedInstance(context)?.isUserOnDuty = state.isUserOnDuty
                 } else {

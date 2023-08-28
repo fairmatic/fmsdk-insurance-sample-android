@@ -1,6 +1,7 @@
 package com.fairmatic.sampleapp
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -20,11 +21,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        loadFirstFragment()
+        //loadFirstFragment()
     }
 
     override fun onResume() {
         super.onResume()
+        /*
         val driverId: String? = SharedPrefsManager.sharedInstance(this)?.driverId
         // if the user is already logged in or setup previously failed, the Fairmatic SDK should be set up.
         if (driverId != null ||
@@ -42,13 +44,17 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+         */
+        FairmaticManager.sharedInstance().updateFairmaticInsurancePeriod(this)
+        loadFirstFragment()
         // check Fairmatic settings on app resume if there are errors/warnings present
         FairmaticManager.sharedInstance().maybeCheckFairmaticSettings(this)
     }
 
-    private fun loadFirstFragment() {
+    fun loadFirstFragment() {
         val firstFragment: Fragment = if (SharedPrefsManager.sharedInstance(this)?.driverId != null) {
             if (TripManager.sharedInstance(this)?.tripManagerState?.isUserOnDuty == true) {
+                Log.d(Constants.LOG_TAG_DEBUG, "OnDutyFragment chosen")
                 OnDutyFragment()
             } else {
                 OffDutyFragment()
