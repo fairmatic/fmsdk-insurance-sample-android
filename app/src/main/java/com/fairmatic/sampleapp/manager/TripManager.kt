@@ -46,7 +46,7 @@ class TripManager private constructor(context: Context) {
 
     @Synchronized
     fun acceptNewPassengerRequest(context: Context, callback: FairmaticOperationCallback) {
-        updateTrackingIdIfNeeded(context)
+        //updateTrackingIdIfNeeded(context)
         FairmaticManager.sharedInstance().handleInsurancePeriod2(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
@@ -65,7 +65,7 @@ class TripManager private constructor(context: Context) {
 
     @Synchronized
     fun pickupAPassenger(context: Context, callback: FairmaticOperationCallback) {
-        updateTrackingIdIfNeeded(context)
+        //updateTrackingIdIfNeeded(context)
         FairmaticManager.sharedInstance().handleInsurancePeriod3(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
@@ -83,7 +83,7 @@ class TripManager private constructor(context: Context) {
 
     @Synchronized
     fun cancelARequest(context: Context, callback: FairmaticOperationCallback) {
-        updateTrackingIdIfNeeded(context)
+        //updateTrackingIdIfNeeded(context)
         FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
@@ -100,7 +100,7 @@ class TripManager private constructor(context: Context) {
 
     @Synchronized
     fun dropAPassenger(context: Context, callback: FairmaticOperationCallback) {
-        updateTrackingIdIfNeeded(context)
+        //updateTrackingIdIfNeeded(context)
         FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
@@ -116,7 +116,7 @@ class TripManager private constructor(context: Context) {
 
     @Synchronized
     fun goOnDuty(context: Context) {
-        updateTrackingIdIfNeeded(context)
+        //updateTrackingIdIfNeeded(context)
         FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
@@ -132,7 +132,7 @@ class TripManager private constructor(context: Context) {
 
     @Synchronized
     fun goOffDuty(context: Context, callback: FairmaticOperationCallback) {
-        updateTrackingIdIfNeeded(context)
+        //updateTrackingIdIfNeeded(context)
         FairmaticManager.sharedInstance().handleStopPeriod(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
@@ -145,19 +145,6 @@ class TripManager private constructor(context: Context) {
 
             }
         })
-    }
-
-    private fun updateTrackingIdIfNeeded(context: Context) {
-        if (state.isUserOnDuty ) {
-            // We need trackingId
-            if (state.trackingId == null) {
-                state.trackingId = System.currentTimeMillis().toString()
-                SharedPrefsManager.sharedInstance(context)?.trackingId = state.trackingId
-            }
-        } else {
-            state.trackingId = null
-            SharedPrefsManager.sharedInstance(context)?.trackingId = state.trackingId
-        }
     }
 
     @get:Synchronized
