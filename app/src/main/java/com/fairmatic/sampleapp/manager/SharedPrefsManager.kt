@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import java.lang.reflect.Array.set
 
 @SuppressLint("ApplySharedPref")
 class SharedPrefsManager private constructor(context: Context) {
@@ -24,21 +25,18 @@ class SharedPrefsManager private constructor(context: Context) {
             prefs.edit().putBoolean(USER_ON_DUTY, isUserOnDuty).apply()
         }
 
-    fun passengersInCar(): Boolean {
-        return prefs.getBoolean(PASSENGERS_IN_CAR, false)
-    }
+    var passengersInCar: Boolean
+        get() = prefs.getBoolean(PASSENGERS_IN_CAR, false)
+        set(passengersInCar) {
+            prefs.edit().putBoolean(PASSENGERS_IN_CAR, passengersInCar).apply()
+        }
 
-    fun setPassengersInCar(passengersInCar: Boolean) {
-        prefs.edit().putBoolean(PASSENGERS_IN_CAR, passengersInCar).apply()
-    }
+    var passengersWaitingForPickup: Boolean
+        get() = prefs.getBoolean(PASSENGERS_WAITING_FOR_PICKUP, false)
+        set(passengersWaitingForPickup) {
+            prefs.edit().putBoolean(PASSENGERS_WAITING_FOR_PICKUP, passengersWaitingForPickup).apply()
+        }
 
-    fun  passengersWaitingForPickup(): Boolean {
-                    return prefs.getBoolean(PASSENGERS_WAITING_FOR_PICKUP, false)
-    }
-
-    fun setPassengersWaitingForPickup(passengersWaitingForPickup: Boolean) {
-        prefs.edit().putBoolean(PASSENGERS_WAITING_FOR_PICKUP, passengersWaitingForPickup).apply()
-    }
 
     var trackingId: String?
         get() = prefs.getString(TRACKING_ID, null)

@@ -38,8 +38,8 @@ class TripManager private constructor(context: Context) {
         val sharedPrefsManager = SharedPrefsManager.sharedInstance(context)
         state = State(
             sharedPrefsManager!!.isUserOnDuty,
-            sharedPrefsManager.passengersWaitingForPickup(),
-            sharedPrefsManager.passengersInCar(),
+            sharedPrefsManager.passengersWaitingForPickup,
+            sharedPrefsManager.passengersInCar,
             sharedPrefsManager.trackingId
         )
     }
@@ -52,7 +52,7 @@ class TripManager private constructor(context: Context) {
                 if (result is FairmaticOperationResult.Success){
                     state.passengerWaitingForPickup = true
                     SharedPrefsManager.sharedInstance(context)
-                        ?.setPassengersWaitingForPickup(state.passengerWaitingForPickup)
+                        ?.passengersWaitingForPickup = state.passengerWaitingForPickup
                 } else {
                     Toast.makeText(context, "Failed to accept new passenger request", Toast.LENGTH_SHORT).show()
                 }
@@ -71,7 +71,7 @@ class TripManager private constructor(context: Context) {
                 if (result is FairmaticOperationResult.Success){
                     state.passengerInCar = true
                     state.passengerWaitingForPickup = false
-                    SharedPrefsManager.sharedInstance(context)!!.setPassengersInCar(state.passengerInCar)
+                    SharedPrefsManager.sharedInstance(context)?.passengersInCar = state.passengerInCar
 
                 } else {
                     Toast.makeText(context, "Failed to pickup a passenger", Toast.LENGTH_SHORT).show()
@@ -89,7 +89,7 @@ class TripManager private constructor(context: Context) {
                 if (result is FairmaticOperationResult.Success){
                     state.passengerWaitingForPickup = false
                     SharedPrefsManager.sharedInstance(context)
-                        ?.setPassengersWaitingForPickup(state.passengerWaitingForPickup)
+                        ?.passengersWaitingForPickup = state.passengerWaitingForPickup
                 } else {
                     Toast.makeText(context, "Failed to cancel a request", Toast.LENGTH_SHORT).show()
                 }
@@ -105,7 +105,7 @@ class TripManager private constructor(context: Context) {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
                     state.passengerInCar = false
-                    SharedPrefsManager.sharedInstance(context)!!.setPassengersInCar(state.passengerInCar)
+                    SharedPrefsManager.sharedInstance(context)?.passengersInCar = state.passengerInCar
                 } else {
                     Toast.makeText(context, "Failed to drop a passenger", Toast.LENGTH_SHORT).show()
                 }
