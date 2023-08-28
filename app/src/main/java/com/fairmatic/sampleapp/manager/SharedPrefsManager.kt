@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import java.lang.reflect.Array.set
 
 @SuppressLint("ApplySharedPref")
 class SharedPrefsManager private constructor(context: Context) {
@@ -14,35 +13,41 @@ class SharedPrefsManager private constructor(context: Context) {
         prefs = PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-    var driverId: String?
+    var driverId: String? = null
         get() = prefs.getString(DRIVER_ID, null)
-        set(driverId) {
-            prefs.edit().putString(DRIVER_ID, driverId).apply()
+        set(value) {
+            field = value
+            prefs.edit().putString(DRIVER_ID, value).apply()
         }
-    var isUserOnDuty: Boolean
+    var isUserOnDuty: Boolean = false
         get() = prefs.getBoolean(USER_ON_DUTY, false)
-        set(isUserOnDuty) {
-            prefs.edit().putBoolean(USER_ON_DUTY, isUserOnDuty).apply()
+        set(value) {
+            field = value
+            prefs.edit().putBoolean(USER_ON_DUTY, value).apply()
         }
 
-    var passengersInCar: Boolean
+    var passengersInCar: Boolean = false
         get() = prefs.getBoolean(PASSENGERS_IN_CAR, false)
-        set(passengersInCar) {
-            prefs.edit().putBoolean(PASSENGERS_IN_CAR, passengersInCar).apply()
+        set(value) {
+            field = value
+            prefs.edit().putBoolean(PASSENGERS_IN_CAR, value).apply()
         }
 
-    var passengersWaitingForPickup: Boolean
+    var passengersWaitingForPickup: Boolean = false
         get() = prefs.getBoolean(PASSENGERS_WAITING_FOR_PICKUP, false)
-        set(passengersWaitingForPickup) {
-            prefs.edit().putBoolean(PASSENGERS_WAITING_FOR_PICKUP, passengersWaitingForPickup).apply()
+        set(value) {
+            field = value
+            prefs.edit().putBoolean(PASSENGERS_WAITING_FOR_PICKUP, value).apply()
         }
 
 
-    var trackingId: String?
+    var trackingId: String? = null
         get() = prefs.getString(TRACKING_ID, null)
-        set(trackingId) {
-            prefs.edit().putString(TRACKING_ID, trackingId).apply()
+        set(value) {
+            field = value
+            prefs.edit().putString(TRACKING_ID, value).apply()
         }
+
     val isSettingsErrorFound: Boolean
         get() = prefs.getBoolean(FAIRMATIC_SETTINGS_ERRORS, false)
 

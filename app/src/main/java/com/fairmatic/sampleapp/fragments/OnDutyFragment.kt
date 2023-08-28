@@ -188,10 +188,10 @@ class OnDutyFragment : Fragment() {
         val fairmaticManager : FairmaticManager? = context?.let { FairmaticManager.sharedInstance() }
         if (tripManager != null && fairmaticManager != null) {
             val state = tripManager.tripManagerState
-            if (state.isUserOnDuty) {
-                if (state.passengerWaitingForPickup) {
+            if (state?.isUserOnDuty == true) {
+                if (state?.passengerWaitingForPickup == true) {
                     refreshUIForPeriod2()
-                } else if (state.passengerInCar) {
+                } else if (state?.passengerInCar == true) {
                     refreshUIForPeriod3()
                 } else {
                     refreshUIForPeriod1()

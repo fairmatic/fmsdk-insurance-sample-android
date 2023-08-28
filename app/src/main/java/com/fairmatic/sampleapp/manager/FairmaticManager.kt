@@ -252,11 +252,11 @@ class FairmaticManager {
         val state = TripManager.sharedInstance(
             context!!
         )!!.tripManagerState
-        return if (!state.isUserOnDuty) {
+        return if (state?.isUserOnDuty == false) {
             null
-        } else if (state.passengerInCar) {
+        } else if (state?.passengerInCar == true) {
             InsuranceInfo(3)
-        } else if (state.passengerWaitingForPickup) {
+        } else if (state?.passengerWaitingForPickup == true) {
             InsuranceInfo(2)
         } else {
             InsuranceInfo(1)

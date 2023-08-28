@@ -12,7 +12,7 @@ class TripManager private constructor(context: Context) {
         var isUserOnDuty: Boolean
         var passengerWaitingForPickup: Boolean
         var passengerInCar: Boolean
-        var trackingId: String?
+        private var trackingId: String?
 
         internal constructor(
             isUserOnDuty: Boolean, passenegersWaitingForPickup: Boolean,
@@ -32,16 +32,18 @@ class TripManager private constructor(context: Context) {
         }
     }
 
-    private val state: State
+    private val state: State?
 
     init {
         val sharedPrefsManager = SharedPrefsManager.sharedInstance(context)
-        state = State(
-            sharedPrefsManager!!.isUserOnDuty,
-            sharedPrefsManager.passengersWaitingForPickup,
-            sharedPrefsManager.passengersInCar,
-            sharedPrefsManager.trackingId
-        )
+        state = sharedPrefsManager?.let{
+            State(
+                it.isUserOnDuty,
+                it.passengersInCar,
+                it.passengersWaitingForPickup,
+                it.trackingId
+            )
+        }
     }
 
     @Synchronized
@@ -50,9 +52,9 @@ class TripManager private constructor(context: Context) {
         FairmaticManager.sharedInstance().handleInsurancePeriod2(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
-                    state.passengerWaitingForPickup = true
+                    state?.passengerWaitingForPickup = true
                     SharedPrefsManager.sharedInstance(context)
-                        ?.passengersWaitingForPickup = state.passengerWaitingForPickup
+                        ?.passengersWaitingForPickup = state?.passengerWaitingForPickup == true
                 } else {
                     Toast.makeText(context, "Failed to accept new passenger request", Toast.LENGTH_SHORT).show()
                 }
@@ -69,9 +71,9 @@ class TripManager private constructor(context: Context) {
         FairmaticManager.sharedInstance().handleInsurancePeriod3(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
-                    state.passengerInCar = true
-                    state.passengerWaitingForPickup = false
-                    SharedPrefsManager.sharedInstance(context)?.passengersInCar = state.passengerInCar
+                    state?.passengerInCar = true
+                    state?.passengerWaitingForPickup = false
+                    SharedPrefsManager.sharedInstance(context)?.passengersInCar = state?.passengerInCar == true
 
                 } else {
                     Toast.makeText(context, "Failed to pickup a passenger", Toast.LENGTH_SHORT).show()
@@ -87,9 +89,9 @@ class TripManager private constructor(context: Context) {
         FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
-                    state.passengerWaitingForPickup = false
+                    state?.passengerWaitingForPickup = false
                     SharedPrefsManager.sharedInstance(context)
-                        ?.passengersWaitingForPickup = state.passengerWaitingForPickup
+                        ?.passengersWaitingForPickup = state?.passengerWaitingForPickup == true
                 } else {
                     Toast.makeText(context, "Failed to cancel a request", Toast.LENGTH_SHORT).show()
                 }
@@ -104,8 +106,8 @@ class TripManager private constructor(context: Context) {
         FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
-                    state.passengerInCar = false
-                    SharedPrefsManager.sharedInstance(context)?.passengersInCar = state.passengerInCar
+                    state?.passengerInCar = false
+                    SharedPrefsManager.sharedInstance(context)?.passengersInCar = state?.passengerInCar == true
                 } else {
                     Toast.makeText(context, "Failed to drop a passenger", Toast.LENGTH_SHORT).show()
                 }
@@ -121,8 +123,8 @@ class TripManager private constructor(context: Context) {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
                     Log.d(Constants.LOG_TAG_DEBUG, "goOnDuty of tripmanager called")
-                    state.isUserOnDuty = true
-                    SharedPrefsManager.sharedInstance(context)?.isUserOnDuty = state.isUserOnDuty
+                    state?.isUserOnDuty = true
+                    SharedPrefsManager.sharedInstance(context)?.isUserOnDuty = state?.isUserOnDuty == true
                 } else {
                     Toast.makeText(context, "Failed to go on duty", Toast.LENGTH_SHORT).show()
                 }
@@ -136,8 +138,8 @@ class TripManager private constructor(context: Context) {
         FairmaticManager.sharedInstance().handleStopPeriod(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
-                    state.isUserOnDuty = false
-                    SharedPrefsManager.sharedInstance(context)?.isUserOnDuty = state.isUserOnDuty
+                    state?.isUserOnDuty = false
+                    SharedPrefsManager.sharedInstance(context)?.isUserOnDuty = state?.isUserOnDuty == true
                 } else {
                     Toast.makeText(context, "Failed to go off duty", Toast.LENGTH_SHORT).show()
                 }
@@ -148,8 +150,8 @@ class TripManager private constructor(context: Context) {
     }
 
     @get:Synchronized
-    val tripManagerState: State
-        get() = State(state)
+    val tripManagerState: State?
+        get() = state?.let { State(it) }
 
     companion object {
         private var sharedInstance: TripManager? = null
