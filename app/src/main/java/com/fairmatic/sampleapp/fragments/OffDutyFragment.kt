@@ -11,6 +11,8 @@ import com.fairmatic.sampleapp.manager.TripManager
 import com.fairmatic.sampleapp.Constants
 import com.fairmatic.sampleapp.MainActivity
 import com.fairmatic.sampleapp.R
+import com.fairmatic.sdk.classes.FairmaticOperationCallback
+import com.fairmatic.sdk.classes.FairmaticOperationResult
 
 class OffDutyFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(
@@ -28,10 +30,19 @@ class OffDutyFragment : Fragment(), View.OnClickListener {
         }
     }
 
+
     private fun goOnDutyButtonClicked() {
         Log.d(Constants.LOG_TAG_DEBUG, "goOnDutyButtonClicked")
         Toast.makeText(context, "Going on duty", Toast.LENGTH_SHORT).show()
-        context?.let { TripManager.sharedInstance(it)?.goOnDuty(requireContext()) }
-        (activity as MainActivity).replaceFragment(OnDutyFragment())
+        context?.let { TripManager.sharedInstance(it)?.goOnDuty(requireContext(), object : FairmaticOperationCallback{
+            override fun onCompletion(result: FairmaticOperationResult) {
+                if(result is FairmaticOperationResult.Success){
+                    (activity as MainActivity).replaceFragment(OnDutyFragment())
+                }
+                else{
+                    Log.d(Constants.LOG_TAG_DEBUG, "goOnDutyButtonClicked failed")
+                }
+            }
+        }) }
     }
 }

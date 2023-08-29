@@ -74,6 +74,7 @@ class TripManager private constructor(context: Context) {
                     state?.passengerInCar = true
                     state?.passengerWaitingForPickup = false
                     SharedPrefsManager.sharedInstance(context)?.passengersInCar = state?.passengerInCar == true
+                    SharedPrefsManager.sharedInstance(context)?.passengersWaitingForPickup = state?.passengerWaitingForPickup == true
 
                 } else {
                     Toast.makeText(context, "Failed to pickup a passenger", Toast.LENGTH_SHORT).show()
@@ -117,7 +118,7 @@ class TripManager private constructor(context: Context) {
     }
 
     @Synchronized
-    fun goOnDuty(context: Context) {
+    fun goOnDuty(context: Context, callback: FairmaticOperationCallback) {
         //updateTrackingIdIfNeeded(context)
         FairmaticManager.sharedInstance().handleInsurancePeriod1(context, object : FairmaticOperationCallback {
             override fun onCompletion(result: FairmaticOperationResult) {
@@ -128,6 +129,7 @@ class TripManager private constructor(context: Context) {
                 } else {
                     Toast.makeText(context, "Failed to go on duty", Toast.LENGTH_SHORT).show()
                 }
+                callback.onCompletion(result)
             }
         })
     }

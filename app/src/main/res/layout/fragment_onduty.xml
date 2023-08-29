@@ -14,7 +14,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:lineSpacingExtra="4sp"
-        android:text="Passengers In Car: False\nPassengers Waiting For Pickup: False"
+        android:text="Passengers In Car: FALSE\nPassengers Waiting For Pickup: False"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"

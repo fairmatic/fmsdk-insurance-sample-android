@@ -38,7 +38,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
         if (driverId != "") {
             // Save driver information
             context?.let { SharedPrefsManager.sharedInstance(it)}?.driverId = driverId
-            // Initialize ZendriveSDK
+            // Initialize FairmaticSDK
             FairmaticManager.sharedInstance().initializeFairmaticSDK(context, driverId, object: FairmaticOperationCallback {
                 override fun onCompletion(result: FairmaticOperationResult) {
                     if(result is FairmaticOperationResult.Success) {
