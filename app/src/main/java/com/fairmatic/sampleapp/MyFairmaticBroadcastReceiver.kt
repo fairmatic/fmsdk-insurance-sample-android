@@ -36,10 +36,10 @@ class MyFairmaticBroadcastReceiver : FairmaticBroadcastReceiver() {
         context: Context, errorsFound: Boolean,
         warningsFound: Boolean
     ) {
-        Log.d(Constants.LOG_TAG_DEBUG, "onZendriveSettingsConfigChanged")
+        Log.d(Constants.LOG_TAG_DEBUG, "onFairmaticConfigChanged")
 
-        // Persist whether the Zendrive SDK has detected errors or warnings.
-        // Use these persisted flags as a basis to determine whether Zendrive settings
+        // Persist whether the Fairmatic SDK has detected errors or warnings.
+        // Use these persisted flags as a basis to determine whether Fairmatic settings
         // should be fetched on app resume.
         val prefsManager: SharedPrefsManager? = context?.let { SharedPrefsManager.sharedInstance(it) }
         prefsManager?.setSettingsErrorsFound(errorsFound)
