@@ -3,7 +3,6 @@ package com.fairmatic.sampleapp.manager
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 
 @SuppressLint("ApplySharedPref")
 class SharedPrefsManager private constructor(context: Context) {
@@ -26,18 +25,18 @@ class SharedPrefsManager private constructor(context: Context) {
             prefs.edit().putBoolean(USER_ON_DUTY, value).apply()
         }
 
-    var passengersInCar: Boolean = false
-        get() = prefs.getBoolean(PASSENGERS_IN_CAR, false)
+    var passengerInCar: Boolean = false
+        get() = prefs.getBoolean(PASSENGER_IN_CAR, false)
         set(value) {
             field = value
-            prefs.edit().putBoolean(PASSENGERS_IN_CAR, value).apply()
+            prefs.edit().putBoolean(PASSENGER_IN_CAR, value).apply()
         }
 
-    var passengersWaitingForPickup: Boolean = false
-        get() = prefs.getBoolean(PASSENGERS_WAITING_FOR_PICKUP, false)
+    var passengerWaitingForPickup: Boolean = false
+        get() = prefs.getBoolean(PASSENGER_WAITING_FOR_PICKUP, false)
         set(value) {
             field = value
-            prefs.edit().putBoolean(PASSENGERS_WAITING_FOR_PICKUP, value).apply()
+            prefs.edit().putBoolean(PASSENGER_WAITING_FOR_PICKUP, value).apply()
         }
 
 
@@ -73,8 +72,8 @@ class SharedPrefsManager private constructor(context: Context) {
         private var sharedInstance: SharedPrefsManager? = null
         private const val DRIVER_ID = "driverId"
         private const val USER_ON_DUTY = "isUserOnDuty"
-        private const val PASSENGERS_IN_CAR = "passengersInCar"
-        private const val PASSENGERS_WAITING_FOR_PICKUP = "passengersWaitingForPickup"
+        private const val PASSENGER_IN_CAR = "passengerInCar"
+        private const val PASSENGER_WAITING_FOR_PICKUP = "passengerWaitingForPickup"
         private const val TRACKING_ID = "trackingId"
         private const val FAIRMATIC_SETTINGS_ERRORS = "errorsFound"
         private const val FAIRMATIC_SETTINGS_WARNINGS = "warningsFound"

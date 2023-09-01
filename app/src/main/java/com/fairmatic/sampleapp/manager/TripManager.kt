@@ -15,12 +15,12 @@ class TripManager private constructor(context: Context) {
         private var trackingId: String?
 
         internal constructor(
-            isUserOnDuty: Boolean, passenegersWaitingForPickup: Boolean,
-            passenegersInCar: Boolean, trackingId: String?
+            isUserOnDuty: Boolean, passenegerWaitingForPickup: Boolean,
+            passenegerInCar: Boolean, trackingId: String?
         ) {
             this.isUserOnDuty = isUserOnDuty
-            this.passengerWaitingForPickup = passenegersWaitingForPickup
-            this.passengerInCar = passenegersInCar
+            this.passengerWaitingForPickup = passenegerWaitingForPickup
+            this.passengerInCar = passenegerInCar
             this.trackingId = trackingId
         }
 
@@ -39,8 +39,8 @@ class TripManager private constructor(context: Context) {
         state = sharedPrefsManager?.let{
             State(
                 it.isUserOnDuty,
-                it.passengersInCar,
-                it.passengersWaitingForPickup,
+                it.passengerInCar,
+                it.passengerWaitingForPickup,
                 it.trackingId
             )
         }
@@ -53,7 +53,7 @@ class TripManager private constructor(context: Context) {
                 if (result is FairmaticOperationResult.Success){
                     state?.passengerWaitingForPickup = true
                     SharedPrefsManager.sharedInstance(context)
-                        ?.passengersWaitingForPickup = state?.passengerWaitingForPickup == true
+                        ?.passengerWaitingForPickup = state?.passengerWaitingForPickup == true
                 } else {
                     Toast.makeText(context, "Failed to accept new passenger request", Toast.LENGTH_SHORT).show()
                 }
@@ -71,8 +71,8 @@ class TripManager private constructor(context: Context) {
                 if (result is FairmaticOperationResult.Success){
                     state?.passengerInCar = true
                     state?.passengerWaitingForPickup = false
-                    SharedPrefsManager.sharedInstance(context)?.passengersInCar = state?.passengerInCar == true
-                    SharedPrefsManager.sharedInstance(context)?.passengersWaitingForPickup = state?.passengerWaitingForPickup == true
+                    SharedPrefsManager.sharedInstance(context)?.passengerInCar = state?.passengerInCar == true
+                    SharedPrefsManager.sharedInstance(context)?.passengerWaitingForPickup = state?.passengerWaitingForPickup == true
 
                 } else {
                     Toast.makeText(context, "Failed to pickup a passenger", Toast.LENGTH_SHORT).show()
@@ -89,7 +89,7 @@ class TripManager private constructor(context: Context) {
                 if (result is FairmaticOperationResult.Success){
                     state?.passengerWaitingForPickup = false
                     SharedPrefsManager.sharedInstance(context)
-                        ?.passengersWaitingForPickup = state?.passengerWaitingForPickup == true
+                        ?.passengerWaitingForPickup = state?.passengerWaitingForPickup == true
                 } else {
                     Toast.makeText(context, "Failed to cancel a request", Toast.LENGTH_SHORT).show()
                 }
@@ -104,7 +104,7 @@ class TripManager private constructor(context: Context) {
             override fun onCompletion(result: FairmaticOperationResult) {
                 if (result is FairmaticOperationResult.Success){
                     state?.passengerInCar = false
-                    SharedPrefsManager.sharedInstance(context)?.passengersInCar = state?.passengerInCar == true
+                    SharedPrefsManager.sharedInstance(context)?.passengerInCar = state?.passengerInCar == true
                 } else {
                     Toast.makeText(context, "Failed to drop a passenger", Toast.LENGTH_SHORT).show()
                 }
