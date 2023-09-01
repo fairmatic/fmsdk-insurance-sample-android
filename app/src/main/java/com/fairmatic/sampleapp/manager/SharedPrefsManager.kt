@@ -10,7 +10,7 @@ class SharedPrefsManager private constructor(context: Context) {
     private val prefs: SharedPreferences
 
     init {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        prefs = context.getSharedPreferences("com.fairmatic.sampleapp", Context.MODE_PRIVATE)
     }
 
     var driverId: String? = null
