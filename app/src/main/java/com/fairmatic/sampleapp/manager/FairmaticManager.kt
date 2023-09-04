@@ -169,9 +169,10 @@ class FairmaticManager {
 
     fun handleInsurancePeriod1(context : Context?, callback : FairmaticOperationCallback?){
         if (context != null) {
-            Log.d(Constants.LOG_TAG_DEBUG, "handleInsurancePeriod1 called")
+
             Fairmatic.startDriveWithPeriod1(context, object : FairmaticOperationCallback {
                 override fun onCompletion(result: FairmaticOperationResult) {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Starting Period 1")
                     callback?.onCompletion(result)
                 }
             })
@@ -180,10 +181,11 @@ class FairmaticManager {
 
     fun handleInsurancePeriod2(context: Context?, callback: FairmaticOperationCallback?) {
         if (context != null) {
-            System.currentTimeMillis().toString().let {
-                Log.d(Constants.LOG_TAG_DEBUG, "handleInsurancePeriod2 called")
+            val trackingId = "P2-${System.currentTimeMillis()}"
+            trackingId.let {
                 Fairmatic.startDriveWithPeriod2(context, it, object : FairmaticOperationCallback {
                     override fun onCompletion(result: FairmaticOperationResult) {
+                        Log.d(Constants.LOG_TAG_DEBUG, "Starting Period 2 with trackingId: $trackingId")
                         callback?.onCompletion(result)
                     }
                 })
@@ -194,10 +196,11 @@ class FairmaticManager {
 
     fun handleInsurancePeriod3(context: Context?, callback: FairmaticOperationCallback?){
         if (context != null) {
-            System.currentTimeMillis().toString().let {
-                Log.d(Constants.LOG_TAG_DEBUG, "handleInsurancePeriod3 called")
+            val trackingId = "P3-${System.currentTimeMillis()}"
+            trackingId.let {
                 Fairmatic.startDriveWithPeriod3(context, it, object : FairmaticOperationCallback {
                     override fun onCompletion(result: FairmaticOperationResult) {
+                        Log.d(Constants.LOG_TAG_DEBUG, "Starting Period 3 with trackingId: $trackingId")
                         callback?.onCompletion(result)
                     }
                 })
@@ -207,9 +210,9 @@ class FairmaticManager {
 
     fun handleStopPeriod(context: Context?, callback: FairmaticOperationCallback?){
         if (context != null) {
-            Log.d(Constants.LOG_TAG_DEBUG, "handleStopPeriod called")
             Fairmatic.stopPeriod(context, object : FairmaticOperationCallback {
                 override fun onCompletion(result: FairmaticOperationResult) {
+                    Log.d(Constants.LOG_TAG_DEBUG, "Stopping Period")
                     callback?.onCompletion(result)
                 }
             })
