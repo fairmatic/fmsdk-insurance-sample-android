@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Insurance Sample App</string>
+    <string name="action_settings">Settings</string>
+    <string name="email_placeholder">user@email.com</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="go_on_duty_message">Click the button below when you are ready to go on duty!</string>
+    <string name="on_duty_button_text">Go On Duty \u00A0 &#128663;</string>
+    <string name="accept_new_ride_request">Accept New Ride Request</string>
+    <string name="pickup_a_passenger">Pickup A Passenger</string>
+    <string name="cancel_a_request">Cancel A Request</string>
+    <string name="drop_a_passenger">Drop A Passenger</string>
+    <string name="off_duty">Off Duty \u00A0 &#127969;</string>
+    <string name="permissions_message">Please provide the following permissions from Settings:
+        \u000A \u000A 1. Location \u000A 2. Draw over other apps \u000A 3. Notification</string>
+    <string name="driver_id_placeholder">Enter your driver id here</string>
+</resources>
