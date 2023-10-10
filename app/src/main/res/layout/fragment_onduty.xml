@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE androidx.constraintlayout.widget.ConstraintLayout>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/currentStateTextView"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:lineSpacingExtra="4sp"
+        android:text="Passenger In Car: FALSE\nPassenger Waiting For Pickup: FALSE"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/currentInsurancePeriodTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:text="Insurance Period: 1"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentStateTextView" />
+
+    <Button
+        android:id="@+id/acceptNewRideRequestButton"
+        style="@style/CustomButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="63dp"
+        android:background="@color/colorButtonPrimary"
+        android:text="@string/accept_new_ride_request"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentInsurancePeriodTextView" />
+
+    <Button
+        android:id="@+id/cancelARequestButton"
+        style="@style/CustomButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="63dp"
+        android:background="@color/colorButtonPrimary"
+        android:text="@string/cancel_a_request"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pickupAPassengerButton" />
+
+    <Button
+        android:id="@+id/dropAPassengerButton"
+        style="@style/CustomButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="63dp"
+        android:background="@color/colorButtonPrimary"
+        android:text="@string/drop_a_passenger"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cancelARequestButton" />
+
+    <Button
+        android:id="@+id/pickupAPassengerButton"
+        style="@style/CustomButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="63dp"
+        android:background="@color/colorButtonPrimary"
+        android:text="@string/pickup_a_passenger"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/acceptNewRideRequestButton" />
+
+    <Button
+        android:id="@+id/offDutyButton"
+        style="@style/CustomButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:background="#E91E63"
+        android:text="@string/off_duty"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dropAPassengerButton"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
