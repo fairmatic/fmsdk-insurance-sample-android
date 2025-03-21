@@ -3,7 +3,6 @@ package com.fairmatic.sampleapp.manager
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import com.fairmatic.sampleapp.Constants
 import com.fairmatic.sampleapp.R
@@ -125,7 +124,7 @@ object FairmaticManager {
     // Start insurance period 1
     fun startInsurancePeriod1(context: Context, callback: FairmaticOperationCallback?) {
         Log.d(Constants.LOG_TAG_DEBUG, "Start insurance period 1 called")
-        Fairmatic.startDriveWithPeriod1(context, callback)
+        Fairmatic.startDriveWithPeriod1(context, System.currentTimeMillis().toString(), callback)
     }
 
     // Start insurance period 2
