@@ -7,7 +7,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.fairmatic.sampleapp.Constants
-import com.fairmatic.sampleapp.MyFairmaticNotificationProvider
+import com.fairmatic.sampleapp.R
 import com.fairmatic.sampleapp.utils.NotificationUtility
 import com.fairmatic.sampleapp.utils.SettingIntent
 import com.fairmatic.sdk.Fairmatic
@@ -18,7 +18,7 @@ import com.fairmatic.sdk.classes.FairmaticOperationCallback
 import com.fairmatic.sdk.classes.FairmaticOperationResult
 import com.fairmatic.sdk.classes.FairmaticSettings
 import com.fairmatic.sdk.classes.FairmaticSettingsCallback
-import com.fairmatic.sdk.classes.GooglePlaySettingsError
+import com.fairmatic.sdk.classes.FairmaticTripNotification
 
 object FairmaticManager {
 
@@ -45,7 +45,11 @@ object FairmaticManager {
         Fairmatic.setup(
             context,
             fairmaticConfiguration,
-            MyFairmaticNotificationProvider::class.java,
+            FairmaticTripNotification(
+                "Fairmatic",
+                "Fairmatic",
+                R.drawable.notification_icon,
+            ),
             object : FairmaticOperationCallback {
                 override fun onCompletion(result: FairmaticOperationResult) {
                     if (result is FairmaticOperationResult.Success) {
