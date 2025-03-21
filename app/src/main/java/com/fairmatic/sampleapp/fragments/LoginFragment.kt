@@ -35,7 +35,7 @@ class LoginFragment(val goOffDuty: () -> Unit) : Fragment() {
         val driverId: String = view?.findViewById<EditText>(R.id.idEditText)?.text.toString()
 
         // Use the Fairmatic SDK to validate the driver id
-        if (driverId.isBlank() && !Fairmatic.isValidInputParameter(driverId)) {
+        if (driverId.isBlank()) {
             Toast.makeText(context, "Please enter a valid driver id", Toast.LENGTH_SHORT).show()
             return
         }

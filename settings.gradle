@@ -10,6 +10,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
+        maven {
+            // Drive Quant Maven repository
+            url "https://maven.drivequant.com/repository/android-sdk/"
+        }
     }
 }
 rootProject.name = "sampleApp"
