@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.fairmatic.sampleapp.Constants
 import com.fairmatic.sampleapp.R
 import com.fairmatic.sampleapp.utils.NotificationUtility
@@ -13,10 +12,9 @@ import com.fairmatic.sampleapp.utils.SettingIntent
 import com.fairmatic.sdk.Fairmatic
 import com.fairmatic.sdk.classes.FairmaticConfiguration
 import com.fairmatic.sdk.classes.FairmaticDriverAttributes
-import com.fairmatic.sdk.classes.FairmaticIssueType
 import com.fairmatic.sdk.classes.FairmaticOperationCallback
 import com.fairmatic.sdk.classes.FairmaticOperationResult
-import com.fairmatic.sdk.classes.FairmaticSettings
+import com.fairmatic.sdk.classes.FairmaticSettingError
 import com.fairmatic.sdk.classes.FairmaticSettingsCallback
 import com.fairmatic.sdk.classes.FairmaticTripNotification
 
@@ -79,28 +77,18 @@ object FairmaticManager {
         // clear all previous setting error notifications.
         NotificationUtility.clearAllErrorNotifications(context)
         Fairmatic.getFairmaticSettings(context, object : FairmaticSettingsCallback {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onComplete(fairmaticSettings: FairmaticSettings?) {
-                if (fairmaticSettings == null) {
+            override fun onComplete(errors: List<FairmaticSettingError>) {
+                if (errors.isEmpty()) {
                     // The callback returns null if the SDK is not setup.
                     return
                 }
 
                 // Handle errors
-                for (error in fairmaticSettings.errors) {
-                    Log.d("fmsdk", "error: ${error.type}")
-                    val actionIntent = SettingIntent.forError(error.type, context) ?: continue
-                    when (error.type) {
-                        FairmaticIssueType.POWER_SAVER_MODE_ENABLED -> {
-                            val notification: Notification =
-                                NotificationUtility.getPSMNotification(context, actionIntent, true)
-                            getNotificationManager(context).notify(
-                                NotificationUtility.PSM_ENABLED_NOTIFICATION_ID,
-                                notification
-                            )
-                        }
-
-                        FairmaticIssueType.BACKGROUND_RESTRICTION_ENABLED -> {
+                for (error in errors) {
+                    Log.d("fmsdk", "error: $error")
+                    val actionIntent = SettingIntent.forError(error, context) ?: continue
+                    when (error) {
+                        FairmaticSettingError.BACKGROUND_RESTRICTION_ENABLED -> {
                             val notification: Notification =
                                 NotificationUtility.getBackgroundRestrictedNotification(context, actionIntent)
                             getNotificationManager(context).notify(
@@ -109,20 +97,7 @@ object FairmaticManager {
                             )
                         }
 
-                        FairmaticIssueType.GOOGLE_PLAY_SETTINGS_ERROR -> {
-                            val e: GooglePlaySettingsError = error as GooglePlaySettingsError
-                            val notification: Notification =
-                                NotificationUtility.getGooglePlaySettingsNotification(
-                                    context,
-                                    e.googlePlaySettingsResult
-                                )
-                            getNotificationManager(context).notify(
-                                NotificationUtility.GOOGLE_PLAY_SETTINGS_NOTIFICATION_ID,
-                                notification
-                            )
-                        }
-
-                        FairmaticIssueType.LOCATION_PERMISSION_DENIED -> {
+                        FairmaticSettingError.LOCATION_PERMISSION_DENIED -> {
                             val notification: Notification =
                                 NotificationUtility.getLocationPermissionDeniedNotification(context, actionIntent)
                             getNotificationManager(context).notify(
@@ -131,28 +106,11 @@ object FairmaticManager {
                             )
                         }
 
-                        FairmaticIssueType.ACTIVITY_RECOGNITION_PERMISSION_DENIED -> {
+                        FairmaticSettingError.ACTIVITY_RECOGNITION_PERMISSION_DENIED -> {
                             val notification: Notification =
                                 NotificationUtility.getActivityRecognitionPermissionDeniedNotification(context, actionIntent)
                             getNotificationManager(context).notify(
                                 NotificationUtility.ACTIVITY_RECOGNITION_DENIED_NOTIFICATION_ID,
-                                notification
-                            )
-                        }
-
-                        else -> {}
-                    }
-                }
-
-                // Handle warnings
-                for (warning in fairmaticSettings.warnings) {
-                    val actionIntent = SettingIntent.forError(warning.type, context) ?: continue
-                    when (warning.type) {
-                        FairmaticIssueType.POWER_SAVER_MODE_ENABLED -> {
-                            val notification: Notification =
-                                NotificationUtility.getPSMNotification(context, actionIntent, false)
-                            getNotificationManager(context).notify(
-                                NotificationUtility.PSM_ENABLED_NOTIFICATION_ID,
                                 notification
                             )
                         }
