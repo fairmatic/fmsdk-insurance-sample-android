@@ -14,6 +14,7 @@ import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import com.fairmatic.sampleapp.Constants
+import com.fairmatic.sampleapp.Constants.ACTIVITY_RECOGNITION_REQUEST
 import com.fairmatic.sampleapp.MainActivity
 import com.fairmatic.sampleapp.R
 import com.fairmatic.sampleapp.SettingsCheckActivity
@@ -21,6 +22,7 @@ import com.google.android.gms.location.LocationSettingsResult
 
 object NotificationUtility {
     var LOCATION_PERMISSION_DENIED_NOTIFICATION_ID = 100
+    var ACTIVITY_RECOGNITION_DENIED_NOTIFICATION_ID = 101
     var PSM_ENABLED_NOTIFICATION_ID = 103
     var BACKGROUND_RESTRICTED_NOTIFICATION_ID = 105
     var WIFI_SCANNING_DISABLED_NOTIFICATION_ID = 107
@@ -67,10 +69,8 @@ object NotificationUtility {
      */
     @RequiresApi(Build.VERSION_CODES.O)
      // This error shouldn't be sent below this.
-    fun getPSMNotification(context: Context, isError: Boolean): Notification {
+    fun getPSMNotification(context: Context, actionIntent: Intent, isError: Boolean): Notification {
         createNotificationChannels(context)
-        val actionIntent = Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS)
-        actionIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         val pi: PendingIntent = PendingIntent.getActivity(
             context, PSM_ENABLED_REQUEST_CODE,
             actionIntent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -92,12 +92,8 @@ object NotificationUtility {
      * the application.
      */
     @TargetApi(Build.VERSION_CODES.P)
-    fun getBackgroundRestrictedNotification(context: Context): Notification {
+    fun getBackgroundRestrictedNotification(context: Context, actionIntent: Intent): Notification {
         createNotificationChannels(context)
-        val actionIntent = Intent(
-            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.parse("package:" + context.packageName)
-        )
         actionIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         val pi: PendingIntent = PendingIntent.getActivity(
             context, BACKGROUND_RESTRICTED_REQUEST_CODE,
@@ -118,11 +114,8 @@ object NotificationUtility {
      * Creates a notification to be displayed when location permission is denied to the application.
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getLocationPermissionDeniedNotification(context: Context): Notification {
+    fun getLocationPermissionDeniedNotification(context: Context, actionIntent: Intent): Notification {
         createNotificationChannels(context)
-        val actionIntent = Intent(context, SettingsCheckActivity::class.java)
-        actionIntent.setAction(Constants.EVENT_LOCATION_PERMISSION_ERROR)
-        actionIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pi: PendingIntent = PendingIntent.getActivity(
             context, LOCATION_PERMISSION_REQUEST_CODE,
             actionIntent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -131,6 +124,28 @@ object NotificationUtility {
             .setContentTitle("Location Permission Denied")
             .setTicker("Location Permission Denied")
             .setContentText("Grant location permission to Fairmatic Test")
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pi)
+            .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
+            .build()
+    }
+
+    /**
+     * Creates a notification to be displayed when activity recognition permission is denied to the application.
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getActivityRecognitionPermissionDeniedNotification(context: Context, actionIntent: Intent): Notification {
+        createNotificationChannels(context)
+        val pi: PendingIntent = PendingIntent.getActivity(
+            context, ACTIVITY_RECOGNITION_REQUEST,
+            actionIntent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        return Notification.Builder(context, ISSUES_CHANNEL_KEY)
+            .setContentTitle("Activity Recognition Denied")
+            .setTicker("Activity Recognition Denied")
+            .setContentText("Grant activity recognition permission to Fairmatic Test")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setOnlyAlertOnce(true)
             .setContentIntent(pi)

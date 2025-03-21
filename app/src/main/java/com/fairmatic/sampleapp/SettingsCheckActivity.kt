@@ -36,6 +36,14 @@ class SettingsCheckActivity : AppCompatActivity() {
                 resolveGooglePlaySettings(r)
             }
         }
+        if (Constants.EVENT_ACTIVITY_RECOGNITION_ERROR == intent.action) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+                    Constants.ACTIVITY_RECOGNITION_REQUEST
+                )
+            }
+        }
     }
 
     private fun requestLocationPermission() {
@@ -83,6 +91,12 @@ class SettingsCheckActivity : AppCompatActivity() {
                 Context.NOTIFICATION_SERVICE
             ) as NotificationManager
             notificationManager.cancel(NotificationUtility.LOCATION_PERMISSION_DENIED_NOTIFICATION_ID)
+        }
+        if (requestCode == Constants.ACTIVITY_RECOGNITION_REQUEST && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            val notificationManager: NotificationManager = applicationContext.getSystemService(
+                Context.NOTIFICATION_SERVICE
+            ) as NotificationManager
+            notificationManager.cancel(NotificationUtility.ACTIVITY_RECOGNITION_DENIED_NOTIFICATION_ID)
         }
         startActivity(Intent(this, MainActivity::class.java))
         finish()
