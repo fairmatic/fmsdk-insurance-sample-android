@@ -47,5 +47,5 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     //Add FMSDK dependency
-    implementation 'com.fairmatic:sdk:1.0.5'
+    implementation 'com.fairmatic:sdk:2.1.0'
 }
