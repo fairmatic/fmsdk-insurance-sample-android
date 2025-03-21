@@ -7,7 +7,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.fairmatic.sampleapp.Constants
-import com.fairmatic.sampleapp.MyFairmaticBroadcastReceiver
 import com.fairmatic.sampleapp.MyFairmaticNotificationProvider
 import com.fairmatic.sampleapp.utils.NotificationUtility
 import com.fairmatic.sampleapp.utils.SettingIntent
@@ -46,7 +45,6 @@ object FairmaticManager {
         Fairmatic.setup(
             context,
             fairmaticConfiguration,
-            MyFairmaticBroadcastReceiver::class.java,
             MyFairmaticNotificationProvider::class.java,
             object : FairmaticOperationCallback {
                 override fun onCompletion(result: FairmaticOperationResult) {
