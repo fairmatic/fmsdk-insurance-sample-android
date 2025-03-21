@@ -26,7 +26,8 @@ object FairmaticManager {
     private const val Fairmatic_SDK_KEY =  ""
 
     private val fairmaticDriverAttributes = FairmaticDriverAttributes(
-        name = "John Doe",
+        firstName = "John",
+        lastName = "Doe",
         email = "john_doe@company.com",
         phoneNumber = "1234567890"
     )
