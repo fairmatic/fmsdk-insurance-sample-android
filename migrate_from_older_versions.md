@@ -3,7 +3,7 @@
 1. Update dependency version in your build files
 
 ```groovy
-implementation 'com.fairmatic:sdk:3.0.0'
+implementation 'com.fairmatic:sdk:3.0.1'
 ```
 
 2. Add drivequant maven to your repositories block (settings.gradle or build.gradle)

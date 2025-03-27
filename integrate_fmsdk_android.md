@@ -11,7 +11,7 @@
 1. In your module's build.gradle file, add the dependency.
 
 ```groovy
-implementation 'com.fairmatic:sdk:3.0.0'
+implementation 'com.fairmatic:sdk:3.0.1'
 ```
 
 2. In your app's settings.gradle file, add the repository.
