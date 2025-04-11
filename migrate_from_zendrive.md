@@ -10,7 +10,7 @@ migrate to 3.x version of the Fairmatic SDK.
 1. Update dependency version in your build files
 
 ```groovy
-implementation 'com.fairmatic:sdk:3.0.1'
+implementation 'com.fairmatic:sdk:3.0.2'
 ```
 
 2. Add drivequant maven to your repositories block (settings.gradle or build.gradle)
