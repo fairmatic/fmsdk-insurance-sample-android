@@ -1,9 +1,11 @@
 package com.fairmatic.sampleapp.manager
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import com.fairmatic.sampleapp.Constants
 import com.fairmatic.sampleapp.R
 import com.fairmatic.sampleapp.utils.NotificationUtility
@@ -16,6 +18,8 @@ import com.fairmatic.sdk.classes.FairmaticOperationResult
 import com.fairmatic.sdk.classes.FairmaticSettingError
 import com.fairmatic.sdk.classes.FairmaticSettingsCallback
 import com.fairmatic.sdk.classes.FairmaticTripNotification
+import com.fairmatic.sdk.classes.TripNotificationContainer
+import com.fairmatic.sdk.classes.TripNotificationContainerProvider
 
 object FairmaticManager {
 
@@ -69,6 +73,38 @@ object FairmaticManager {
                 }
             }
         )
+
+        /**
+         * Optionally configure dynamic trip notifications using a lambda.
+         * This allows customizing the notification content at runtime based on your business logic.
+         * It ensures the notification reflects the most up-to-date information every time it's shown.
+         */
+        Fairmatic.configureTripNotification(object: TripNotificationContainerProvider{
+            override fun get(): TripNotificationContainer {
+                // Create notification channel
+                val channelId = "example_channel"
+                val channelName = "Example Channel Name"
+                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH).apply {
+                    description = "Example channel for Fairmatic trip notifications"
+                }
+                notificationManager.createNotificationChannel(channel)
+
+                // Create notification
+                val timestamp = System.currentTimeMillis()
+                val notification = NotificationCompat.Builder(context, channelId)
+                    .setContentTitle("Example notification")
+                    .setContentText("Timestamp: $timestamp")
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .build()
+
+                // Set notification ID
+                val notificationId = Int.MIN_VALUE
+
+                return TripNotificationContainer(channel, notification, notificationId)
+            }
+        })
     }
 
     // Check for Fairmatic settings errors and warnings
