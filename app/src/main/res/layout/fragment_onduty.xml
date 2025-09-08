@@ -95,19 +95,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/acceptNewRideRequestButton" />
 
-    <Button
+    <LinearLayout
         android:id="@+id/openIncidentReportButton"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="63dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="63dp"
-        android:background="@color/colorButtonSecondary"
-        android:text="@string/open_incident_report"
+        android:background="@drawable/claims_button_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dropAPassengerButton" />
+        app:layout_constraintTop_toBottomOf="@+id/dropAPassengerButton">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_an_incident"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/offDutyButton"
