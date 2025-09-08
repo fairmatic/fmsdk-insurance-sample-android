@@ -48,5 +48,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.3.0'
 
     //Add FMSDK dependency
-    implementation 'com.fairmatic:sdk:3.0.2'
+    implementation 'com.fairmatic:sdk:3.1.0'
 }

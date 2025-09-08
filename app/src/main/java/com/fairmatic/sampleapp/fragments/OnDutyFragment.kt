@@ -6,13 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import com.fairmatic.sampleapp.Constants
 import com.fairmatic.sampleapp.R
 import com.fairmatic.sampleapp.manager.FairmaticManager
 import com.fairmatic.sampleapp.manager.SharedPrefsManager
+import com.fairmatic.sdk.Fairmatic
 import com.fairmatic.sdk.classes.FairmaticOperationCallback
 import com.fairmatic.sdk.classes.FairmaticOperationResult
 
@@ -23,7 +27,9 @@ class OnDutyFragment(val goOffDuty: () -> Unit) : Fragment() {
     private lateinit var pickupAPassengerButton: Button
     private lateinit var cancelRequestButton: Button
     private lateinit var dropAPassengerButton: Button
+    private lateinit var openIncidentReportingWebPageButton: LinearLayout
     private lateinit var offDutyButton: Button
+    private lateinit var loadingProgressBar: ProgressBar
     private lateinit var acceptNewRideReqButton: Button
 
     private val sharedPrefsManager by lazy { SharedPrefsManager.sharedInstance(requireContext()) }
@@ -52,6 +58,14 @@ class OnDutyFragment(val goOffDuty: () -> Unit) : Fragment() {
 
         dropAPassengerButton = layout.findViewById(R.id.dropAPassengerButton)
         dropAPassengerButton.setOnClickListener { dropAPassengerClicked() }
+
+        openIncidentReportingWebPageButton = layout.findViewById(R.id.openIncidentReportButton)
+        openIncidentReportingWebPageButton.setOnClickListener {
+            Log.d(Constants.LOG_TAG_DEBUG, "Opening incident reporting URL")
+            openIncidentReportingUrl() }
+
+        loadingProgressBar = layout.findViewById(R.id.loadingProgressBar)
+        loadingProgressBar.visibility = View.GONE
 
         offDutyButton = layout.findViewById(R.id.offDutyButton)
         offDutyButton.setOnClickListener { offDutyClicked() }
@@ -160,6 +174,27 @@ class OnDutyFragment(val goOffDuty: () -> Unit) : Fragment() {
 
         sharedPrefsManager.isUserOnDuty = false
         goOffDuty()
+    }
+
+    private fun openIncidentReportingUrl() {
+        loadingProgressBar.visibility = View.VISIBLE
+        FairmaticManager.openIncidentReportingWebPage(
+            requireContext(),
+            object : FairmaticOperationCallback {
+                override fun onCompletion(result: FairmaticOperationResult) {
+                    loadingProgressBar.visibility = View.GONE
+                    if (result is FairmaticOperationResult.Success) {
+                        Log.d(Constants.LOG_TAG_DEBUG, "Incident reporting URL opened")
+                    }
+                    if (result is FairmaticOperationResult.Failure) {
+                        Log.d(
+                            Constants.LOG_TAG_DEBUG,
+                            "Opening incident reporting URL failed, error: " +
+                                    result.error.name
+                        )
+                    }
+                }
+            })
     }
 
     private fun refreshUI(){

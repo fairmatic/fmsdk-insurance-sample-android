@@ -7,6 +7,7 @@
     <string name="on_duty_button_text">Go On Duty \u00A0 &#128663;</string>
     <string name="accept_new_ride_request">Accept New Ride Request</string>
     <string name="pickup_a_passenger">Pickup A Passenger</string>
+    <string name="report_an_incident">Report an incident</string>
     <string name="cancel_a_request">Cancel A Request</string>
     <string name="drop_a_passenger">Drop A Passenger</string>
     <string name="off_duty">Off Duty \u00A0 &#127969;</string>
