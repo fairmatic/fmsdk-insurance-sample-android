@@ -13,6 +13,7 @@ import com.fairmatic.sampleapp.Constants
 import com.fairmatic.sampleapp.R
 import com.fairmatic.sampleapp.manager.FairmaticManager
 import com.fairmatic.sampleapp.manager.SharedPrefsManager
+import com.fairmatic.sdk.Fairmatic
 import com.fairmatic.sdk.classes.FairmaticOperationCallback
 import com.fairmatic.sdk.classes.FairmaticOperationResult
 
@@ -23,6 +24,7 @@ class OnDutyFragment(val goOffDuty: () -> Unit) : Fragment() {
     private lateinit var pickupAPassengerButton: Button
     private lateinit var cancelRequestButton: Button
     private lateinit var dropAPassengerButton: Button
+    private lateinit var openIncidentReportingWebPageButton: Button
     private lateinit var offDutyButton: Button
     private lateinit var acceptNewRideReqButton: Button
 
@@ -52,6 +54,9 @@ class OnDutyFragment(val goOffDuty: () -> Unit) : Fragment() {
 
         dropAPassengerButton = layout.findViewById(R.id.dropAPassengerButton)
         dropAPassengerButton.setOnClickListener { dropAPassengerClicked() }
+
+        openIncidentReportingWebPageButton = layout.findViewById(R.id.openIncidentReportButton)
+        openIncidentReportingWebPageButton.setOnClickListener { openIncidentReportingUrl() }
 
         offDutyButton = layout.findViewById(R.id.offDutyButton)
         offDutyButton.setOnClickListener { offDutyClicked() }
@@ -160,6 +165,25 @@ class OnDutyFragment(val goOffDuty: () -> Unit) : Fragment() {
 
         sharedPrefsManager.isUserOnDuty = false
         goOffDuty()
+    }
+
+    private fun openIncidentReportingUrl() {
+        FairmaticManager.openIncidentReportingWebPage(
+            requireContext(),
+            object : FairmaticOperationCallback {
+                override fun onCompletion(result: FairmaticOperationResult) {
+                    if (result is FairmaticOperationResult.Success) {
+                        Log.d(Constants.LOG_TAG_DEBUG, "Incident reporting URL opened")
+                    }
+                    if (result is FairmaticOperationResult.Failure) {
+                        Log.d(
+                            Constants.LOG_TAG_DEBUG,
+                            "Opening incident reporting URL failed, error: " +
+                                    result.error.name
+                        )
+                    }
+                }
+            })
     }
 
     private fun refreshUI(){

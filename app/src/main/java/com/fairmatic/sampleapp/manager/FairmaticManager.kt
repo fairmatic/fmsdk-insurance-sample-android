@@ -151,6 +151,10 @@ object FairmaticManager {
         Fairmatic.stopPeriod(context, callback)
     }
 
+    fun openIncidentReportingWebPage(context: Context, callback: FairmaticOperationCallback?) {
+        Fairmatic.openIncidentReportingWebPage(context, callback)
+    }
+
     private fun getNotificationManager(context: Context): NotificationManager {
         return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }

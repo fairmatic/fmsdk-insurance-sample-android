@@ -5,6 +5,7 @@
     <color name="colorAccent">#555555</color>
 
     <color name="colorButtonPrimary">#3F51B5</color>
+    <color name="colorButtonSecondary">#FF9800</color>
     <color name="custom_button_text_color">#FFFFFF</color>
     <color name="custom_button_disabled_text_color">#808080</color>
 
